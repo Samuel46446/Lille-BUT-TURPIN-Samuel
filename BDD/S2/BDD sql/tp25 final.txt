@@ -1,0 +1,100 @@
+-- create
+CREATE TABLE AEROPORT (
+  rno CHAR(3),
+  libelle TEXT,
+  ville TEXT,
+  addresseA TEXT,
+  CONSTRAINT pk_rno PRIMARY KEY (rno)
+);
+
+-- create
+CREATE TABLE AVION (
+  ano INTEGER,
+  type TEXT,
+  places INTEGER CONSTRAINT cl CHECK (places >99 and places < 501),
+  compagnie TEXT,
+  CONSTRAINT pk_ano PRIMARY KEY (ano)
+);
+
+-- create
+CREATE TABLE PILOTE (
+  pno SERIAL,
+  nom TEXT NOT NULL,
+  prenom TEXT NOT NULL,
+  adresseP TEXT NULL,
+  CONSTRAINT pk_pno PRIMARY KEY (pno)
+);
+
+-- create
+CREATE TABLE LIGNE (
+  lno INTEGER,
+  depart CHAR(3), 
+  arrivee CHAR(3),
+  CONSTRAINT pk_lno PRIMARY KEY (lno),
+  CONSTRAINT fk_rno_depart FOREIGN KEY (depart) REFERENCES AEROPORT(rno) ON UPDATE CASCADE ON DELETE SET NULL,
+  CONSTRAINT fk_rno_arrivee FOREIGN KEY (arrivee) REFERENCES AEROPORT(rno) ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+-- create
+CREATE TABLE VOL (
+  ano INTEGER,
+  pno SERIAL,
+  lno INTEGER,
+  hdep CHAR(5),
+  harr CHAR(5),
+  CONSTRAINT pk_vol PRIMARY KEY (ano, pno, lno),
+  CONSTRAINT fk_ano FOREIGN KEY (ano) REFERENCES AVION(ano) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_pno FOREIGN KEY (pno) REFERENCES PILOTE(pno) ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_lno FOREIGN KEY (lno) REFERENCES LIGNE(lno) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+-- insert
+INSERT INTO avion VALUES(100, 'B747', 350, 'AIR FRANCE') ;
+INSERT INTO avion VALUES(101, 'B747', 500, 'TWA') ;
+INSERT INTO avion(ano, type, places) VALUES(102, 'A320', 200) ;
+INSERT INTO avion(ano, type, compagnie) VALUES(103, 'B747', 'TWA') ;
+INSERT INTO avion(compagnie, places, type, ano) VALUES('AIR FRANCE', 500, 'B747', 104) ;
+INSERT INTO avion(ano,places, type) VALUES(105,350, 'B747') ;
+INSERT INTO AEROPORT VALUES('CDG', 'Roissy-Charles de Gaulle', 'Paris', 'Roissy');
+--INSERT INTO aeroport(rno, libelle, ville) VALUES ('CDG', 'Roissy-Charles de Gaulle', 'Paris');
+INSERT INTO aeroport(rno, ville, libelle) VALUES ('MAD', 'Madrid Barajas', 'Madrid');
+INSERT INTO aeroport(rno, ville) VALUES ('SDN', 'Sydney');
+INSERT INTO aeroport(rno, ville) VALUES ('DUB', 'Dublin');
+INSERT INTO aeroport(rno, ville) VALUES ('JFK', 'Texas');
+INSERT INTO pilote(nom, prenom, adressep) VALUES('Szut', 'Piotr', 'Estonie');
+INSERT INTO pilote(nom, prenom, adressep) VALUES('Lindbergh', 'Charles', 'USA');
+INSERT INTO pilote(nom, prenom) VALUES('Abagnale', 'Frank');
+INSERT INTO pilote(adressep, nom, prenom) VALUES('USA', 'Taylor', 'Frank');
+INSERT INTO ligne(lno, arrivee) VALUES(714, 'SDN') ;
+INSERT INTO ligne VALUES(314, 'CDG', 'MAD') ;
+INSERT INTO ligne VALUES(315, 'CDG', 'DUB') ;
+INSERT INTO ligne(lno,depart, arrivee) VALUES(316,'MAD', 'SDN') ;
+INSERT INTO vol VALUES(104, 3, 314, '12:00', '13:30');
+INSERT INTO vol VALUES(104, 4, 714, '21:00', '23:00');
+INSERT INTO vol(lno, pno, ano) VALUES(714, 1, 102);
+
+-- 1er SELECT
+SELECT * from AEROPORT;
+SELECT * from  avion;
+SELECT * from  pilote;
+SELECT * from  VOL;
+SELECT * from  LIGNE;
+
+--update 
+UPDATE vol SET hdep = '11:00', harr='17:25' WHERE hdep IS NULL ;
+--UPDATE avion SET ano=104 WHERE ano=102 ;
+UPDATE vol SET ano = 103 WHERE lno = 314 AND pno = 3;
+UPDATE ligne SET depart='JFK' WHERE depart IS NULL ;
+UPDATE ligne SET lno = 42 WHERE depart = 'CDG' and arrivee = 'MAD' ;
+UPDATE aeroport SET rno = 'SYD', libelle='Sydney-Kingsford Smith' WHERE rno = 'SDN' ;
+UPDATE aeroport SET libelle=ville, ville=libelle WHERE rno = 'MAD' ;
+DELETE FROM avion WHERE compagnie LIKE '%FRANCE' ;
+DELETE FROM pilote WHERE nom = 'Szut' ;
+DELETE FROM aeroport WHERE rno = 'SYD';
+
+-- 2eme SELECT
+SELECT * from AEROPORT;
+SELECT * from  avion;
+SELECT * from  pilote;
+SELECT * from  VOL;
+SELECT * from  LIGNE;

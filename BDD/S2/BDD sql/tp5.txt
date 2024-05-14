@@ -1,0 +1,62 @@
+Q1)
+fournisseur(fno,nom,prenom,adresse,tel)
+CREATE TABLE fournisseur
+(
+	fno INTEGER,
+	nom CHAR(20) NOT NULL,	
+	prenom CHAR(20) NOT NULL,
+	adresse CHAR(50),
+	tel CHAR(20) DEFAULT '+33000000000',
+	CONSTRAINT pk_fournisseur PRIMARY KEY(fno)
+);
+
+produit(pno,libelle,couleur, poids)
+CREATE TABLE produit
+( 
+	pno INTEGER CHECK (pno < 200),
+	libelle CHAR(50),
+	couleur CHAR(10) CHECK (couleur IN ('rouge', 'vert','jaune', 'bleu', 'gris')),
+	poids INTEGER CHECK (poids < 100),
+	CONSTRAINT pk_produits PRIMARY KEY(pno)
+);
+
+commande(#fno,#pno,prix,qute)
+CREATE TABLE commande
+( 
+	fno INTEGER,
+	pno INTEGER,
+	prix NUMERIC(10,2),
+	qute INTEGER,
+	CONSTRAINT pk_commande PRIMARY KEY(fno,pno),
+	CONSTRAINT fk_fournisseur FOREIGN KEY(fno)
+			REFERENCES fournisseur(fno)
+			ON UPDATE CASCADE,
+	CONSTRAINT fk_produit FOREIGN KEY(pno)
+			REFERENCES produit(pno)
+			ON UPDATE CASCADE
+);
+
+Q2)  (Dupont,paul), (Durand,pierre) et (Lefebvre,jean)
+
+INSERT INTO fournisseur(nom,prenom) VALUES ('Dupont', 'paul');
+INSERT INTO fournisseur(nom,prenom) VALUES ('Durand', 'pierre');
+INSERT INTO fournisseur(nom,prenom) VALUES ('Lefebvre', 'jean');
+
+Q3) (Chaise,rouge) , (Bureau,gris), (Armoire,blanc) dans la table produit
+
+INSERT INTO produit(libelle,couleur) VALUES ('Chaise', 'rouge');
+INSERT INTO produit(libelle,couleur) VALUES ('Bureau', 'gris');
+INSERT INTO produit(libelle,couleur) VALUES ('Armoire', 'blanc');
+
+
+Q4) RIEN parce que la table des commandes n'est pas encore renseigner.
+
+Q5)
+INSERT INTO commande(fno,pno, prix, qute) AS select fno, pno, 100,1 from fournisseur, produit;
+
+
+EXERCICE 2
+
+Q2) essayer d'inverser pour voir ce qu'il se passe
+DELETE FROM commande;
+DELETE FROM fournisseur;

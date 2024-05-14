@@ -1,0 +1,49 @@
+Q1) SELECT numetu, Round(Sum(note*coeff)/Sum(coeff),2)
+FROM notes AS N INNER JOIN controles AS C ON N.mat=C.mat AND N.numcont=C.numcont
+GROUP BY numetu, C.coeff;
+
+Q2.1) SELECT numetu, groupe
+FROM etudiants
+WHERE groupe=(SELECT groupe FROM etudiants WHERE numetu=111);
+
+Q2.2) SELECT E2.numetu, E2.groupe
+FROM etudiants AS E1 INNER JOIN etudiants AS E2 ON E1.groupe=E2.groupe
+WHERE E1.numetu=111;
+
+Q3) SELECT N.numetu
+FROM notes AS N INNER JOIN controles AS C ON N.numcont=C.numcont AND N.mat=C.mat
+WHERE N.numcont=2
+GROUP BY N.numetu
+HAVING AVG(note) < AVG(note)*0.80;
+
+Q4)SELECT *
+FROM etudiants
+WHERE numetu NOT IN(SELECT numetu FROM notes WHERE mat='bdd' AND numcont=2);
+
+Q5)SELECT nom, prenom
+FROM etudiants
+WHERE numetu NOT IN(SELECT numetu FROM notes);
+
+Q6)SELECT nom
+FROM etudiants
+WHERE AVG(length(nom))>length(nom);
+
+Q6.1)SELECT nom
+FROM etudiants
+WHERE AVG(length(nom))<length(nom);
+
+Q7)SELECT mat
+FROM notes
+GROUP BY mat
+HAVING COUNT(mat)=(SELECT COUNT(mat) FROM notes WHERE mat = 'algo');
+
+Q8)SELECT numetu, note, numcont
+FROM notes
+WHERE numcont=2 AND mat='algo' and note > (SELECT AVG(note) FROM notes WHERE numcont=2 AND mat='algo');
+
+Q9)SELECT count(*) from  (SELECT DISTINCT prenom FROM etudiants) as tab1
+
+Q10) SELECT note
+FROM notes
+WHERE Sum(note)/Count(note)
+ORDER BY note
