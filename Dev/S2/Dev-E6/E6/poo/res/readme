@@ -1,0 +1,7 @@
+Le fichier data.csv contient des données de tests, il s'agit de villes fictives nommées A,B,C.
+
+Le fichier map.txt est donné uniquement pour votre information, si cela peut vous être utile d'une manière ou d'une autre. Ce fichier n'est pas à utiliser dans le projet.
+Il montre la disposition des villes sur une carte (des villes fictives sur une carte fictive). Ainsi, les couts fictifs donnés dans le fichier data.csv sont proportionnels aux distances entre les villes sur la carte, de manière à avoir des données cohérentes.
+Les . ou ; avant ou après les villes donnent des indications sur les types de gares sur chaque ville (Avion, Train).
+
+
